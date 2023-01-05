@@ -26,28 +26,17 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     public static final int CALL_Perm = 1;
-    private Intent i;
 
-    EditText inputPhone;
+    EditText inputPhone;  // le numero de telephone
 
-    EditText inputC1;
+    EditText inputC1;   // pour challenge 1
+    int number1;
 
-    EditText inputC2;
+    EditText inputC2;    // challenge 2
+    int number2;
 
-    String resultString;
-
-    static int number1;
-
-    static int number2;
-
+    String resultString;    //pour recuperer le resultet de chack
     int resultInt;
-
-    int CODE_MON_ACTIVITE;
-
-
-
-
-
 
 
     @Override
@@ -57,41 +46,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if(extras == null) {
                 resultString = null;
-
             } else {
                 resultString= extras.getString("RESULT_NUM");
             }
         } else {
             resultString= (String) savedInstanceState.getSerializable("RESULT_NUM");
-
         }
-
-        if(resultString!=null){
-
-
-
-
-
-
-
-
-        }
-
-
-
-
-
-
-
     }
-
-
 
     public void toLogin(View view){
         Intent intent=new Intent(this, Login.class);
@@ -102,13 +67,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void toCheck(View view){
         Intent intent=new Intent(this, Check.class);
-        /*Intent intent = new Intent();
-        intent.setAction(login.ACTION);*/
+        //Intent intent = new Intent();
+        //intent.setAction(login.ACTION);
 
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         inputC1 = findViewById(R.id.entier1);
         inputC2 = findViewById(R.id.entier2);
-
 
 
         intent.putExtra("N_1", String.valueOf(inputC1.getText()));
@@ -128,11 +92,6 @@ public class MainActivity extends AppCompatActivity {
            number1= Integer.parseInt(String.valueOf(inputC1.getText()));
            number2= Integer.parseInt(String.valueOf(inputC2.getText()));
        }
-
-
-
-
-
     }//
 
 
@@ -179,9 +138,6 @@ public class MainActivity extends AppCompatActivity {
                                     startActivity(intent);
                                 }
                             }
-
-
-
                         }
 
                     }else {
@@ -196,10 +152,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-
-
-
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -207,75 +159,10 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode==CALL_Perm)
             if(grantResults.length>0)
                 if(grantResults[0]==PackageManager.PERMISSION_GRANTED){
-                    //startActivity(i);
                     Toast.makeText(this, "GRANTED CALL", Toast.LENGTH_SHORT).show();
                 }else{
                     Log.i("call","perm denied");
                 }
     }
-
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-
-        /*outState.putString("c1",String.valueOf(inputC1.getText()));
-        outState.putString("c2",String.valueOf(inputC2.getText()));*/
-        super.onSaveInstanceState(outState);
-
-    }
-
-    @Override
-    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-
-        number1 = Integer.parseInt(savedInstanceState.getString("c1"));
-        number2 = Integer.parseInt(savedInstanceState.getString("c2"));
-
-        Log.i("--------------","------staate restored");
-
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.i("LIFECYCLE ", getLocalClassName() + " : ici onStart");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.i("LIFECYCLE ", getLocalClassName() + " : ici onResume");
-        //Log.i("number 1 on resume sat",Integer. toString(number1));
-        //Log.i("number 2 on resume sat",Integer. toString(number2));
-        //if (resultString!= null) Log.i("number 2 on resume sat",resultString);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.i("LIFECYCLE ", getLocalClassName() + " : ici onPause");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.i("LIFECYCLE ", getLocalClassName() + " : ici onStop");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.i("LIFECYCLE ", getLocalClassName() + " : ici onDestroy");
-        if(this.isFinishing()){
-            System.exit(1);
-        }
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.i("LIFECYCLE ", getLocalClassName() + " : ici onRestart");
-    }
-
 
 }
