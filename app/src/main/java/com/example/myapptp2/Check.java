@@ -1,5 +1,6 @@
 package com.example.myapptp2;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -50,19 +51,31 @@ public class Check extends AppCompatActivity {
 
 
     }
-    
+
     public void button1_click(View view){
-        onBackPressed();
+
+        Intent intent=new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+
+        setResult(79,intent);
+        Check.super.onBackPressed();
+
     }
 
     public void toMain(View view){
         Intent intent=new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         inputResult = (EditText) findViewById(R.id.resultid);
         intent.putExtra("RESULT_NUM", String.valueOf(inputResult.getText()));
-        startActivity (intent);
+
+
+        setResult(78,intent);
+        Check.super.onBackPressed();
 
     }//
 
-
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

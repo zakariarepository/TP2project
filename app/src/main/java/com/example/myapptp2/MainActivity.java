@@ -1,10 +1,17 @@
 package com.example.myapptp2;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -35,6 +42,11 @@ public class MainActivity extends AppCompatActivity {
 
     int resultInt;
 
+    int CODE_MON_ACTIVITE;
+
+
+
+
 
 
 
@@ -44,17 +56,6 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-        if (savedInstanceState != null) {
-            // Restore value of members from saved state
-            number1 = Integer.parseInt(savedInstanceState.getString("c1"));
-            number2 = Integer.parseInt(savedInstanceState.getString("c2"));
-
-        } else {
-            // Probably initialize members with default values for a new instance
-            number1 = 0;
-        }
 
 
 
@@ -76,27 +77,13 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-            Log.i("sd",resultString);
-
-            Log.i("sd",Integer. toString(number1));
-            Log.i("sd",Integer. toString(number2));
 
 
 
-
-            resultInt= Integer.parseInt(resultString);
-
-            if(number1+number2 == resultInt){
-                Log.i("sd","horaaaaaaaaaaaaaaaaaaaaaaaay");
-                String url = "https://emi.ac.ma";
-                Uri webpage = Uri.parse(url);
-                Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivity(intent);
-                }
-            }
 
         }
+
+
 
 
 
@@ -114,12 +101,38 @@ public class MainActivity extends AppCompatActivity {
     }//
 
     public void toCheck(View view){
-        Intent intent=new Intent(this, Check.class);
-        inputC1 = (EditText) findViewById(R.id.entier1);
-        inputC2 = (EditText) findViewById(R.id.entier2);
+        //Intent intent=new Intent(this, Check.class);
+        Intent intent = new Intent();
+        intent.setAction(login.ACTION);
+
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        inputC1 = findViewById(R.id.entier1);
+        inputC2 = findViewById(R.id.entier2);
+
+
+
         intent.putExtra("N_1", String.valueOf(inputC1.getText()));
         intent.putExtra("N_2", String.valueOf(inputC2.getText()));
-        startActivity (intent);
+
+       if(inputC1.getText().toString().matches("") || inputC2.getText().toString().matches("")){
+           Context context = getApplicationContext();
+           CharSequence text = "veuiller remplir tous les champs";
+           int duration = Toast.LENGTH_SHORT;
+
+           Toast toast = Toast.makeText(context, text, duration);
+           toast.show();
+       }else{
+           Log.i("there",inputC1.getText().toString());
+           Log.i("it","this is else");
+           someActivityResultLauncher.launch(intent);
+           number1= Integer.parseInt(String.valueOf(inputC1.getText()));
+           number2= Integer.parseInt(String.valueOf(inputC2.getText()));
+       }
+
+
+
+
+
     }//
 
 
@@ -138,6 +151,50 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
+
+
+    ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == 78) {
+                        // There are no request codes
+                        Intent data = result.getData();
+                        if( data != null){
+                            resultString = data.getStringExtra("RESULT_NUM");
+
+                            Log.i("number 1 on resume sat",Integer. toString(number1));
+                            Log.i("number 2 on resume sat",Integer. toString(number2));
+                            Log.i("reeslut is",resultString);
+
+                            resultInt= Integer.parseInt(resultString);
+
+                            if(number1+number2 == resultInt){
+                                Log.i("sd","horaaaaaaaaaaaaaaaaaaaaay");
+                                String url = "https://emi.ac.ma";
+                                Uri webpage = Uri.parse(url);
+                                Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
+                                if (intent.resolveActivity(getPackageManager()) != null) {
+                                    startActivity(intent);
+                                }
+                            }
+
+
+
+                        }
+
+                    }else {
+
+                        Context context = getApplicationContext();
+                        CharSequence text = "l’opération a été annulée";
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+                    }
+                }
+            });
 
 
 
@@ -159,8 +216,66 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
+
+        /*outState.putString("c1",String.valueOf(inputC1.getText()));
+        outState.putString("c2",String.valueOf(inputC2.getText()));*/
         super.onSaveInstanceState(outState);
-        outState.putString("c1",String.valueOf(inputC1.getText()));
-        outState.putString("c2",String.valueOf(inputC2.getText()));
+
     }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        number1 = Integer.parseInt(savedInstanceState.getString("c1"));
+        number2 = Integer.parseInt(savedInstanceState.getString("c2"));
+
+        Log.i("--------------","------staate restored");
+
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i("LIFECYCLE ", getLocalClassName() + " : ici onStart");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i("LIFECYCLE ", getLocalClassName() + " : ici onResume");
+        //Log.i("number 1 on resume sat",Integer. toString(number1));
+        //Log.i("number 2 on resume sat",Integer. toString(number2));
+        //if (resultString!= null) Log.i("number 2 on resume sat",resultString);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i("LIFECYCLE ", getLocalClassName() + " : ici onPause");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i("LIFECYCLE ", getLocalClassName() + " : ici onStop");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i("LIFECYCLE ", getLocalClassName() + " : ici onDestroy");
+        if(this.isFinishing()){
+            System.exit(1);
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.i("LIFECYCLE ", getLocalClassName() + " : ici onRestart");
+    }
+
+
 }
