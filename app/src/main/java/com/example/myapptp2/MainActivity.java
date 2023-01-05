@@ -101,9 +101,9 @@ public class MainActivity extends AppCompatActivity {
     }//
 
     public void toCheck(View view){
-        //Intent intent=new Intent(this, Check.class);
-        Intent intent = new Intent();
-        intent.setAction(login.ACTION);
+        Intent intent=new Intent(this, Check.class);
+        /*Intent intent = new Intent();
+        intent.setAction(login.ACTION);*/
 
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         inputC1 = findViewById(R.id.entier1);

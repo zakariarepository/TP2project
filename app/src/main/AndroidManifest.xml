@@ -14,10 +14,17 @@
         android:theme="@style/Theme.MyAppTP1p2">
         <activity
             android:name=".Check"
-            android:exported="true" />
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="login.ACTION"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+
+        </activity>
         <activity
             android:name=".Login"
-            android:exported="true" />
+            android:exported="true" >
+        </activity>
         <activity
             android:name=".ActivitePerso"
             android:exported="true" />
@@ -29,6 +36,8 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+
         </activity>
     </application>
 
